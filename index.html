@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print a Read</title>
+    <!-- <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script> -->
+    <style>
+        body {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            align-items: center;
+            padding: 120px;
+            text-align: center;
+            font-family: Times;
+            font-size: 36px;
+            gap: 56px;
+        }
+
+        #left {
+            background-color: white;
+            padding: 24px;
+            width: 600px;
+            height: 900px;
+            text-align: left;
+        }
+
+        #inputs {
+            font-size: 16px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 16px 0 24px 0;
+            accent-color: red;
+        }
+
+        #button-holder {
+            font-size: 16px;
+            vertical-align: bottom;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        #free-text {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #print-content {
+            display: none;
+        }
+
+        button {
+            background-color: white;
+            border: 0;
+        }
+
+        button:hover {
+            color: blue;
+        }
+
+        #state {
+            accent-color: green;
+        }
+
+
+        /* Only for the print content */
+        @media print {
+
+            /* Only target the print content */
+            #print-content {
+                position: relative;
+                width: 11in;
+                height: 8.5in;
+                background: url('/22Sep24-PamphletTest-Letter2.pdf') no-repeat;
+                background-size: cover;
+            }
+
+            /* Inject dynamic "A friend" text */
+            #dynamic-text {
+                position: absolute;
+                font-size: 48pt;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                color: black;
+                text-align: center;
+            }
+
+            /* Inject dynamic date */
+            #dynamic-date {
+                position: absolute;
+                font-size: 12pt;
+                top: 50px;
+                right: 50px;
+                color: black;
+            }
+
+            /* Define the page size for print */
+            @page {
+                size: 11in 8.5in landscape;
+                margin: 0.2in;
+            }
+
+            /* Hide the rest of the content from the screen during printing */
+            body * {
+                display: none;
+            }
+
+            /* Show only the printable content */
+            #print-content {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="left">
+        <div id="datetime"></div>
+        Please use a printer and paper suitable for the US Letter-format to print your publication.
+    </div>
+    <div id="left"
+        style="display: flex; flex-direction: column; justify-content: space-between;width: 900px; height: 600px;">
+        <div>
+            <legend>Who is reading this?</legend>
+            <div id="inputs">
+                <input type="radio" id="me" name="reader" value="me" />
+                <label for="me">Me</label>
+                <input type="radio" id="friend" name="reader" value="friend" />
+                <label for="friend">A friend</label>
+                <input type="radio" id="partner" name="reader" value="partner" />
+                <label for="partner">A partner</label>
+                <input type="radio" id="stranger" name="reader" value="stranger" />
+                <label for="stranger">Someone you don't know</label>
+                <br><br>
+                <div id="free-text">
+                    <label for="custom-input">Your name:</label>
+                    <input type="text" id="custom-input" placeholder="Enter your name..." />
+                </div>
+            </div>
+        </div>
+        <div id="button-holder">
+            <input type="checkbox" id="state" value="state" />
+            <label for="state">I am an active full-time employee of Azerbaijan Republic's Ministry of Emergency
+                Situations</label><br><br>
+            <button type="button" onclick="generatePDF()">( Print your action )</button>
+        </div>
+    </div>
+
+    <div id="print-content" style="display: none;">
+        <!-- Embed the PDF -->
+        <embed src="/22Sep24-PamphletTest-Letter2.pdf" type="application/pdf" width="100%" height="100%">
+
+        <!-- Dynamic text for "A friend" -->
+        <div id="dynamic-text"
+            style="position: absolute; font-size: 48pt; bottom: 100px; left: 50%; transform: translateX(-50%); color: black; text-align: center;">
+        </div>
+
+        <!-- Dynamic date -->
+        <div id="dynamic-date" style="position: absolute; font-size: 12pt; top: 50px; right: 50px; color: black;"></div>
+    </div>
+
+    <script>
+        function updateDateTime() {
+            var now = new Date();
+            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            var dateInWords = now.toLocaleDateString('en-US', options);
+            var timeInWords = now.toLocaleTimeString('en-GB'); // Get the current time
+
+            document.getElementById("datetime").innerHTML = timeInWords + '<br>' + dateInWords + '<br><br>'; // Combine date and time
+        }
+
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        function toggleFreeTextInput() {
+            const radios = document.getElementsByName('reader');
+            const freeTextInput = document.getElementById('free-text');
+
+            radios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (radio.value === 'me') {
+                        freeTextInput.style.display = 'block';
+                    } else {
+                        freeTextInput.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        toggleFreeTextInput();
+
+        function generatePDF() {
+            // Get the current date
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+            const currentDate = now.toLocaleDateString('en-US', options);
+
+            // Set the dynamic text for "A friend"
+            const selectedReader = 'A friend'; // Can be updated based on user input
+            document.getElementById('dynamic-text').textContent = selectedReader;
+
+            // Set the current date
+            document.getElementById('dynamic-date').textContent = currentDate;
+
+            // Show print content and trigger print
+            document.getElementById('print-content').style.display = 'block';
+
+            // Trigger Paged.js to apply pagination and prepare for printing
+            window.print();
+        }
+    </script>
+</body>
+
+
+</html>

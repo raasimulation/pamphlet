@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companion</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 16px;
+            text-align: center;
+            overflow: hidden; /* Prevent scrolling on the body */
+        }
+
+        h1 {
+            font-size: 16px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        #typing-container {
+            color: red;
+            height: 45vh;
+            font-size: 24px;
+            text-align: left;
+            margin-right: 8px;
+            margin-bottom: 35%;
+            overflow-y: auto; /* Enables vertical scrolling */
+            border-right: 0.10em solid red; /* Cursor effect */
+            animation: caret 1s steps(1) infinite; /* Blinking caret */
+            scroll-behavior: smooth; /* Smooth scrolling */
+        }
+
+        #typing-container::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
+        }
+
+        #typing-container {
+            -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
+            scrollbar-width: none;  /* Hide scrollbar for Firefox */
+        }
+
+        @keyframes caret {
+            50% {
+                border-color: transparent;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Post-Internet Cities: Impressions of Disaster by Nashin Mahtani</h1>
+    <div id="typing-container">
+        <p id="typing-text"></p>
+    </div>
+
+    <script>
+        const text = `Returning to the umwelt of the post-internet city, home of billions of human residents, we might ask: how are
+        digital media reshaping human perception? How does this communicative shift drive new communities of sensation,
+        attention, and engagement? While all organisms respond in some way or another to ecological transformations in
+        their surroundings, the mutation of the social and cultural landscape through a proliferation of digital modes
+        of interaction begs the question of human adaptation. For millennia, the plasticity of the human brain has
+        enabled adaptation alongside shifting environmental conditions. In hypermediated environments characterized by
+        carefully calibrated sensory stimuli, the plasticity of the brain is not only exercised, it is capitalized.
+        Competing agencies profit from the capacity to shape perceptions towards particular ends and benefit from the
+        tendency of the brain to iteratively mold itself in response to shifting strategies of inculcation. In the
+        global ecology of attention instantiated by the post-internet city, what should designers do with the brain—both
+        theirs and ours?`;
+
+        let index = 0;
+
+        function typeText() {
+            if (index < text.length) {
+                document.getElementById("typing-text").innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeText, 50);
+
+                // Scroll to the bottom of the container smoothly
+                const container = document.getElementById("typing-container");
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        typeText();
+    </script>
+</body>
+
+</html>
