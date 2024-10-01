@@ -26,19 +26,19 @@
             text-align: justify;
             margin-right: 8px;
             margin-bottom: 8px;
-            overflow-y: auto; /* Enables vertical scrolling */
-            border-right: 0.10em solid red; /* Cursor effect */
-            animation: caret 1s steps(1) infinite; /* Blinking caret */
-            scroll-behavior: smooth; /* Smooth scrolling */
+            overflow-y: auto;
+            border-right: 0.10em solid red;
+            animation: caret 1s steps(1) infinite;
+            scroll-behavior: smooth;
         }
 
         #typing-container::-webkit-scrollbar {
-            display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
+            display: none;
         }
 
         #typing-container {
-            -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer and Edge */
-            scrollbar-width: none;  /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
         @keyframes caret {
@@ -50,13 +50,14 @@
 </head>
 
 <body>
-    <h1>Post-Internet Cities: Impressions of Disaster by Nashin Mahtani</h1>
+    <h1 id="page-title">Post-Internet Cities: Impressions of Disaster by Nashin Mahtani</h1>
     <div id="typing-container">
         <p id="typing-text"></p>
     </div>
 
     <script>
-        const text = `Returning to the umwelt of the post-internet city, home of billions of human residents, we might ask: how are
+        let index = 0;
+        let text = `Returning to the umwelt of the post-internet city, home of billions of human residents, we might ask: how are
         digital media reshaping human perception? How does this communicative shift drive new communities of sensation,
         attention, and engagement? While all organisms respond in some way or another to ecological transformations in
         their surroundings, the mutation of the social and cultural landscape through a proliferation of digital modes
@@ -68,7 +69,8 @@
         global ecology of attention instantiated by the post-internet city, what should designers do with the brain—both
         theirs and ours?`;
 
-        let index = 0;
+        const landscapeTitle = "Brand States: Postmodern Power, Democratic Pluralism, and Design by Metahaven";
+        const landscapeText = 'Being unknown and unbranded makes a state vulnerable to negative branding and image hijacks by third parties. This happened to Kazakhstan with the release of the film Borat: Cultural Learnings of America for Make Benefit Glorious Nation of Kazakhstan. Borat, played by comedian Sacha Baron Cohen, makes use of the fact that global audiences are unaware of what the former Soviet republic of Kazakhstan looks like. The film reshapes Kazakhstan’s image into that of a grotesque backwater inhabited by village idiots, interpersed with Soviet-era footage of agriculture and heavy industries. Van Ham’s analysis concentrates on the controversies following its release. The Kazakh government felt obliged to hire public relations firms, running advertisements in major international newspapers and on television, to tell the world what it “really” was—a fiction of an entirely different kind, of course. Van Ham concludes that “Cohen could have easily made a fool of other unknown countries (like Turkmenistan and Uzbekistan), pointing up the fact for all unbranded countries the risk of not being in charge of their image and reputation and the inability for a country to be in full control of one’s own brand';
 
         function typeText() {
             if (index < text.length) {
@@ -76,13 +78,43 @@
                 index++;
                 setTimeout(typeText, 50);
 
-                // Scroll to the bottom of the container smoothly
                 const container = document.getElementById("typing-container");
                 container.scrollTop = container.scrollHeight;
             }
         }
 
-        typeText();
+        function resetTyping() {
+            index = 0;
+            document.getElementById("typing-text").innerHTML = "";
+            typeText();
+        }
+
+        function updateContentForOrientation() {
+            const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+            if (isLandscape) {
+                document.getElementById("page-title").textContent = landscapeTitle;
+                text = landscapeText;
+            } else {
+                document.getElementById("page-title").textContent = "Post-Internet Cities: Impressions of Disaster by Nashin Mahtani";
+                text = `Returning to the umwelt of the post-internet city, home of billions of human residents, we might ask: how are
+                digital media reshaping human perception? How does this communicative shift drive new communities of sensation,
+                attention, and engagement? While all organisms respond in some way or another to ecological transformations in
+                their surroundings, the mutation of the social and cultural landscape through a proliferation of digital modes
+                of interaction begs the question of human adaptation. For millennia, the plasticity of the human brain has
+                enabled adaptation alongside shifting environmental conditions. In hypermediated environments characterized by
+                carefully calibrated sensory stimuli, the plasticity of the brain is not only exercised, it is capitalized.
+                Competing agencies profit from the capacity to shape perceptions towards particular ends and benefit from the
+                tendency of the brain to iteratively mold itself in response to shifting strategies of inculcation. In the
+                global ecology of attention instantiated by the post-internet city, what should designers do with the brain—both
+                theirs and ours?`;
+            }
+            resetTyping();
+        }
+
+        window.addEventListener("resize", updateContentForOrientation);
+
+        // Initial call to set content based on current orientation
+        updateContentForOrientation();
     </script>
 </body>
 
