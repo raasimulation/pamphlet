@@ -25,7 +25,7 @@
         #typing-container {
             color: black;
             height: 100vh;
-            font-size: 24px;
+            font-size: 28px;
             text-align: justify;
             margin-right: 8px;
             margin-bottom: 16px;
@@ -79,7 +79,7 @@
             if (index < text.length) {
                 document.getElementById("typing-text").innerHTML += text.charAt(index);
                 index++;
-                setTimeout(typeText, 50);
+                setTimeout(typeText, 100);
 
                 const container = document.getElementById("typing-container");
                 container.scrollTop = container.scrollHeight;
